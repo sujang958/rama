@@ -314,10 +314,11 @@ function patienceDiff(
   }
 }
 
-const prev = `dagagg`
+// const prev = `dagagg
+// asdf`
 
-const next = `fdsafsafasf
-dagagg
-zxcvzxv`
+// const next = `sdfasdf
+// dagagg
+// asdf`
 
-console.log(patienceDiff(prev.split("\n"), next.split("\n")))
+// console.log(patienceDiff(prev.split("\n"), next.split("\n")))
