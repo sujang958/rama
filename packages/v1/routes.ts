@@ -3,13 +3,37 @@ import Elysia from "elysia"
 import { parseCookie } from "./utils/http"
 import { join } from "path"
 import { Resolvers } from "./resolvers-types"
+import { GraphQLScalarType, Kind } from "graphql"
 
 const schemaFile = Bun.file(join(import.meta.dir, "./schema.graphql"))
 
 const typeDefs = await schemaFile.text()
 
 const resolvers: Resolvers = {
-  Query: { version: () => "v1-0.0.1" },
+  DateTime: new GraphQLScalarType({
+    name: "DateTime",
+    serialize(value) {
+      if (value instanceof Date) return value.toISOString()
+
+      throw Error("GraphQL Date Scalar serializer expected a `Date` object")
+    },
+    parseValue(value) {
+      const src = isNaN(Number(value)) ? String(value) : Number(value)
+      const date = new Date(src)
+
+      if (isNaN(date.getTime()))
+        throw new Error("GraphQL Date Scalar parser expected a `number`")
+
+      return date
+    },
+    parseLiteral(ast) {
+      if (ast.kind === Kind.INT || ast.kind === Kind.STRING)
+        return new Date(ast.value)
+
+      return null
+    },
+  }),
+  Query: { version: () => "v1:0.0.1" },
 }
 
 // graphql-scalars
