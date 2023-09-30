@@ -1,0 +1,15 @@
+{
+  "name": "@backend/v1",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "dependencies": {
+    "@elysiajs/graphql-yoga": "^0.7.0",
+    "elysia": "latest",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
