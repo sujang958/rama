@@ -1,0 +1,26 @@
+{
+  "name": "@backend/v1",
+  "module": "app.ts",
+  "type": "module",
+  "scripts": {
+    "gen": "graphql-codegen --config ./gql/codegen.ts"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/typescript": "^4.0.1",
+    "@graphql-codegen/typescript-resolvers": "^4.0.1",
+    "bun-types": "latest",
+    "drizzle-kit": "^0.19.13"
+  },
+  "dependencies": {
+    "@elysiajs/graphql-yoga": "^0.7.0",
+    "drizzle-orm": "^0.28.6",
+    "elysia": "^0.7.15",
+    "graphql": "^16.8.1",
+    "jsonwebtoken": "^9.0.2",
+    "postgres": "^3.3.5"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
