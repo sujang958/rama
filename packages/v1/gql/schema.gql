@@ -1,85 +1,88 @@
-scalar DateTime # import { DateTimeTypeDefinition } from "graphql-scalars"
-scalar JSON # import { JSONDefinition } from "graphql-scalars"
-type Query {
-  version: String!
-}
+# scalar DateTime # import { DateTimeTypeDefinition } from "graphql-scalars"
+# scalar JSON # import { JSONDefinition } from "graphql-scalars"
+# type Query {
+#   version: String!
+# }
 
-interface BaseUserToDocument {
-  id: String!
-  userId: String!
-  documentId: String!
-  createdAt: DateTime!
-}
+# interface BaseUserToDocument {
+#   id: String!
+#   userId: String!
+#   documentId: String!
+#   createdAt: DateTime!
+# }
 
-type UserToDocumentWithRelations implements BaseUserToDocument {
-  id: String!
-  userId: String!
-  documentId: String!
-  createdAt: DateTime!
-  document: 
-  user: UserWithoutRelations
-}
+# type UserToDocumentWithRelations implements BaseUserToDocument {
+#   id: String!
+#   userId: String!
+#   documentId: String!
+#   createdAt: DateTime!
+#   document: 
+#   user: UserWithoutRelations
+# }
 
-interface BaseUser {
-  id: String!
-  displayName: String!
-  email: String!
-  createdAt: DateTime!
-  lastActivity: DateTime!
-}
+# interface BaseUser {
+#   id: String!
+#   picture: String!
+#   displayName: String!
+#   email: String!
+#   createdAt: DateTime!
+#   lastActivity: DateTime!
+# }
 
-type UserWithoutRelations implements BaseUser {
-  id: String!
-  displayName: String!
-  email: String!
-  createdAt: DateTime!
-  lastActivity: DateTime!
-}
+# type UserWithoutRelations implements BaseUser {
+#   id: String!
+#   picture: String!
+#   displayName: String!
+#   email: String!
+#   createdAt: DateTime!
+#   lastActivity: DateTime!
+# }
 
-type UserWithRelations implements BaseUser {
-  id: String!
-  displayName: String!
-  email: String!
-  createdAt: DateTime!
-  lastActivity: DateTime!
-}
+# type UserWithRelations implements BaseUser {
+#    id: String!
+#   picture: String!
+#   displayName: String!
+#   email: String!
+#   createdAt: DateTime!
+#   lastActivity: DateTime!
+# }
 
-extend type Query {
-  user(id: String!): User
-}
+# extend type Query {
+#   user(id: String!): User
+# }
 
-interface BaseRevision {
-  id: String!
-  message: String!
-  content: String!
-  authorId: String!
-  documentId: String!
-  changes: [JSON]!
-  additions: Int!
-  deletions: Int!
-  createdAt: DateTime!
-}
+# interface BaseRevision {
+#   id: String!
+#   message: String!
+#   content: String!
+#   authorId: String!
+#   documentId: String!
+#   changes: [JSON]!
+#   additions: Int!
+#   deletions: Int!
+#   createdAt: DateTime!
+# }
 
-type RevisionWithoutRelations implements BaseRevision {
-  id: String!
-  message: String!
-  content: String!
-  authorId: String!
-  documentId: String!
-  changes: [JSON]!
-  additions: Int!
-  deletions: Int!
-  createdAt: DateTime!
-}
+# type RevisionWithoutRelations implements BaseRevision {
+#   id: String!
+#   message: String!
+#   content: String!
+#   authorId: String!
+#   documentId: String!
+#   changes: [JSON]!
+#   additions: Int!
+#   deletions: Int!
+#   createdAt: DateTime!
+# }
 
-type RevisionWithRelations implements BaseRevision {
-  id: String!
-  message: String!
-  content: String!
-  authorId: String!
-  documentId: String!
-  changes: [JSON]!
-  additions: Int!
-  deletions: Int!
-  createdAt: DateTime!
-}
+# type RevisionWithRelations implements BaseRevision {
+#   id: String!
+#   message: String!
+#   content: String!
+#   authorId: String!
+#   documentId: String!
+#   changes: [JSON]!
+#   additions: Int!
+#   deletions: Int!
+#   createdAt: DateTime!
+# }
