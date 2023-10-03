@@ -1,0 +1,1 @@
+ALTER TABLE "users" ADD COLUMN "picture" varchar(4096) DEFAULT 'https://popcat.click/twitter-card.jpg' NOT NULL;

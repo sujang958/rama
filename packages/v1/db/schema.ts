@@ -16,6 +16,9 @@ export const users = pgTable(
   "users",
   {
     id: varchar("id", { length: 64 }).primaryKey(),
+    picture: varchar("picture", { length: 4096 })
+      .notNull()
+      .default("https://popcat.click/twitter-card.jpg"),
     displayName: varchar("display_name", { length: 64 }),
     email: text("email").notNull().unique(),
     createdAt: timestamp("created_at").defaultNow().notNull(),

@@ -1,8 +1,23 @@
 scalar DateTime # import { DateTimeTypeDefinition } from "graphql-scalars"
 scalar JSON # import { JSONDefinition } from "graphql-scalars"
-
 type Query {
   version: String!
+}
+
+interface BaseUserToDocument {
+  id: String!
+  userId: String!
+  documentId: String!
+  createdAt: DateTime!
+}
+
+type UserToDocumentWithRelations implements BaseUserToDocument {
+  id: String!
+  userId: String!
+  documentId: String!
+  createdAt: DateTime!
+  document: 
+  user: UserWithoutRelations
 }
 
 interface BaseUser {
@@ -33,13 +48,38 @@ extend type Query {
   user(id: String!): User
 }
 
-interface Revision {
-   id: String!
+interface BaseRevision {
+  id: String!
+  message: String!
   content: String!
-  authorId: String!,
-  documentId: String!,
-  changes: [JSON]!,
-  additions: integer("additions").notNull(),
-  deletions: integer("deletions").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  authorId: String!
+  documentId: String!
+  changes: [JSON]!
+  additions: Int!
+  deletions: Int!
+  createdAt: DateTime!
+}
+
+type RevisionWithoutRelations implements BaseRevision {
+  id: String!
+  message: String!
+  content: String!
+  authorId: String!
+  documentId: String!
+  changes: [JSON]!
+  additions: Int!
+  deletions: Int!
+  createdAt: DateTime!
+}
+
+type RevisionWithRelations implements BaseRevision {
+  id: String!
+  message: String!
+  content: String!
+  authorId: String!
+  documentId: String!
+  changes: [JSON]!
+  additions: Int!
+  deletions: Int!
+  createdAt: DateTime!
 }

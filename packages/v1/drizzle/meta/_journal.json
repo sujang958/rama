@@ -15,6 +15,13 @@
       "when": 1696343974112,
       "tag": "0001_nostalgic_clint_barton",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1696344441346,
+      "tag": "0002_silly_thing",
+      "breakpoints": true
     }
   ]
 }
