@@ -1,56 +1,9 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "3fb02461-2829-4308-9d84-752ae03bf46f",
+  "id": "459605b8-6770-42b7-b874-e12fd2f05bfa",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "changes": {
-      "name": "changes",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "char(128)",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "revision_id": {
-          "name": "revision_id",
-          "type": "char(128)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "changes": {
-          "name": "changes",
-          "type": "jsonb[]",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "additions": {
-          "name": "additions",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "deletions": {
-          "name": "deletions",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
     "documents": {
       "name": "documents",
       "schema": "",
@@ -97,11 +50,29 @@
           "primaryKey": true,
           "notNull": true
         },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "author_id": {
+          "name": "author_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false
+        },
         "document_id": {
           "name": "document_id",
           "type": "varchar(1024)",
           "primaryKey": false,
           "notNull": false
+        },
+        "changes": {
+          "name": "changes",
+          "type": "jsonb[]",
+          "primaryKey": false,
+          "notNull": true
         },
         "additions": {
           "name": "additions",
@@ -125,6 +96,127 @@
       },
       "indexes": {},
       "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(64)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "display_name": {
+          "name": "display_name",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "last_activity": {
+          "name": "last_activity",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "email_idx": {
+          "name": "email_idx",
+          "columns": [
+            "email"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      }
+    },
+    "users_to_documents": {
+      "name": "users_to_documents",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "document_id": {
+          "name": "document_id",
+          "type": "varchar(1024)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "users_to_documents_user_id_users_id_fk": {
+          "name": "users_to_documents_user_id_users_id_fk",
+          "tableFrom": "users_to_documents",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "users_to_documents_document_id_documents_id_fk": {
+          "name": "users_to_documents_document_id_documents_id_fk",
+          "tableFrom": "users_to_documents",
+          "tableTo": "documents",
+          "columnsFrom": [
+            "document_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     }

@@ -1,25 +1,37 @@
-import { relations } from "drizzle-orm"
+import { relations, sql } from "drizzle-orm"
 import {
   char,
   integer,
   jsonb,
   pgTable,
-  serial,
+  primaryKey,
   text,
   timestamp,
+  uniqueIndex,
+  uuid,
   varchar,
 } from "drizzle-orm/pg-core"
 
-export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
-  displayName: varchar("display_name", { length: 64 }),
-  email: text("email").notNull().unique(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  lastActivity: timestamp("last_activity").defaultNow().notNull(),
-})
+export const users = pgTable(
+  "users",
+  {
+    id: varchar("id", { length: 64 }).primaryKey(),
+    displayName: varchar("display_name", { length: 64 }),
+    email: text("email").notNull().unique(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    lastActivity: timestamp("last_activity").defaultNow().notNull(),
+  },
+  (t) => ({
+    emailIdx: uniqueIndex("email_idx")
+      .on(t.email)
+      .concurrently()
+      .using(sql`HASH (email)`),
+  }),
+)
 
 export const usersRelations = relations(users, ({ many }) => ({
-  contributions: many(documents),
+  revisions: many(revisions),
+  contributions: many(usersToDocuments),
 }))
 
 export const documents = pgTable("documents", {
@@ -31,12 +43,13 @@ export const documents = pgTable("documents", {
 
 export const documentsRelations = relations(documents, ({ many }) => ({
   revisions: many(revisions),
-  contributors: many(users),
+  contributors: many(usersToDocuments),
 }))
 
 export const revisions = pgTable("revisions", {
   id: char("id", { length: 128 }).primaryKey(),
   content: text("content").notNull(),
+  authorId: varchar("author_id", { length: 64 }),
   documentId: varchar("document_id", { length: 1024 }),
   changes: jsonb("changes").array().notNull(),
   additions: integer("additions").notNull(),
@@ -49,33 +62,30 @@ export const revisionsRelations = relations(revisions, ({ one, many }) => ({
     fields: [revisions.documentId],
     references: [documents.id],
   }),
+  author: one(users, { fields: [revisions.authorId], references: [users.id] }),
 }))
 
-// export const usersToDocuments = pgTable(
-//   "users_to_documents",
-//   {
-//     userId: integer("user_id")
-//       .notNull()
-//       .references(() => users.id),
-//     groupId: integer("group_id")
-//       .notNull()
-//       .references(() => groups.id),
-//   },
-//   (t) => ({
-//     pk: primaryKey(t.userId, t.groupId),
-//   }),
-// )
+export const usersToDocuments = pgTable("users_to_documents", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: varchar("user_id", { length: 64 })
+    .notNull()
+    .references(() => users.id),
+  documentId: varchar("document_id", { length: 1024 })
+    .notNull()
+    .references(() => documents.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+})
 
-// export const usersToDocumentsRelations = relations(
-//   usersToDocuments,
-//   ({ one }) => ({
-//     group: one(groups, {
-//       fields: [usersToDocuments.groupId],
-//       references: [groups.id],
-//     }),
-//     user: one(users, {
-//       fields: [usersToDocuments.userId],
-//       references: [users.id],
-//     }),
-//   }),
-// )
+export const usersToDocumentsRelations = relations(
+  usersToDocuments,
+  ({ one }) => ({
+    document: one(documents, {
+      fields: [usersToDocuments.documentId],
+      references: [documents.id],
+    }),
+    user: one(users, {
+      fields: [usersToDocuments.userId],
+      references: [users.id],
+    }),
+  }),
+)
