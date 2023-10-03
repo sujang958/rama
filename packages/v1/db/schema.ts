@@ -48,6 +48,7 @@ export const documentsRelations = relations(documents, ({ many }) => ({
 
 export const revisions = pgTable("revisions", {
   id: char("id", { length: 128 }).primaryKey(),
+  message: varchar("message", { length: 256 }).notNull().default(""),
   content: text("content").notNull(),
   authorId: varchar("author_id", { length: 64 }),
   documentId: varchar("document_id", { length: 1024 }),

@@ -1,3 +1,45 @@
+scalar DateTime # import { DateTimeTypeDefinition } from "graphql-scalars"
+scalar JSON # import { JSONDefinition } from "graphql-scalars"
+
 type Query {
   version: String!
+}
+
+interface BaseUser {
+  id: String!
+  displayName: String!
+  email: String!
+  createdAt: DateTime!
+  lastActivity: DateTime!
+}
+
+type UserWithoutRelations implements BaseUser {
+  id: String!
+  displayName: String!
+  email: String!
+  createdAt: DateTime!
+  lastActivity: DateTime!
+}
+
+type UserWithRelations implements BaseUser {
+  id: String!
+  displayName: String!
+  email: String!
+  createdAt: DateTime!
+  lastActivity: DateTime!
+}
+
+extend type Query {
+  user(id: String!): User
+}
+
+interface Revision {
+   id: String!
+  content: String!
+  authorId: String!,
+  documentId: String!,
+  changes: [JSON]!,
+  additions: integer("additions").notNull(),
+  deletions: integer("deletions").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 }

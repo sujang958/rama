@@ -20,6 +20,7 @@
     "drizzle-orm": "^0.28.6",
     "elysia": "^0.7.15",
     "graphql": "^16.8.1",
+    "graphql-scalars": "^1.22.2",
     "jsonwebtoken": "^9.0.2",
     "postgres": "^3.3.5"
   },
