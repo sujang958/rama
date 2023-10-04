@@ -1,88 +1,135 @@
-# scalar DateTime # import { DateTimeTypeDefinition } from "graphql-scalars"
-# scalar JSON # import { JSONDefinition } from "graphql-scalars"
-# type Query {
-#   version: String!
-# }
+# Types with relations must have types without relations
+# Types in query must have relations
 
-# interface BaseUserToDocument {
-#   id: String!
-#   userId: String!
-#   documentId: String!
-#   createdAt: DateTime!
-# }
+scalar DateTime # import { DateTimeTypeDefinition } from "graphql-scalars"
+scalar JSON # import { JSONDefinition } from "graphql-scalars"
+type Query {
+  version: String!
+}
 
-# type UserToDocumentWithRelations implements BaseUserToDocument {
-#   id: String!
-#   userId: String!
-#   documentId: String!
-#   createdAt: DateTime!
-#   document: 
-#   user: UserWithoutRelations
-# }
+interface BaseUserToDocument {
+  id: String!
+  userId: String!
+  documentId: String!
+  createdAt: DateTime!
+}
 
-# interface BaseUser {
-#   id: String!
-#   picture: String!
-#   displayName: String!
-#   email: String!
-#   createdAt: DateTime!
-#   lastActivity: DateTime!
-# }
+type UserToDocumentWithoutRelations implements BaseUserToDocument {
+  id: String!
+  userId: String!
+  documentId: String!
+  createdAt: DateTime!
+}
 
-# type UserWithoutRelations implements BaseUser {
-#   id: String!
-#   picture: String!
-#   displayName: String!
-#   email: String!
-#   createdAt: DateTime!
-#   lastActivity: DateTime!
-# }
+type UserToDocumentWithRelations implements BaseUserToDocument {
+  id: String!
+  userId: String!
+  documentId: String!
+  createdAt: DateTime!
+  document: DocumentWithoutRelations
+  user: UserWithoutRelations
+}
 
-# type UserWithRelations implements BaseUser {
-#    id: String!
-#   picture: String!
-#   displayName: String!
-#   email: String!
-#   createdAt: DateTime!
-#   lastActivity: DateTime!
-# }
+interface BaseDocument {
+  id: String!
+  content: String!
+  updatedAt: DateTime!
+  createdAt: DateTime!
+}
 
-# extend type Query {
-#   user(id: String!): User
-# }
+type DocumentWithoutRelations implements BaseDocument {
+  id: String!
+  content: String!
+  updatedAt: DateTime!
+  createdAt: DateTime!
+}
 
-# interface BaseRevision {
-#   id: String!
-#   message: String!
-#   content: String!
-#   authorId: String!
-#   documentId: String!
-#   changes: [JSON]!
-#   additions: Int!
-#   deletions: Int!
-#   createdAt: DateTime!
-# }
+type DocumentWithRelations implements BaseDocument {
+  id: String!
+  content: String!
+  updatedAt: DateTime!
+  createdAt: DateTime!
+  revisions: [RevisionWithoutRelations]!
+  contributors: [UserToDocumentWithoutRelations]!
+}
 
-# type RevisionWithoutRelations implements BaseRevision {
-#   id: String!
-#   message: String!
-#   content: String!
-#   authorId: String!
-#   documentId: String!
-#   changes: [JSON]!
-#   additions: Int!
-#   deletions: Int!
-#   createdAt: DateTime!
-# }
+extend type Query {
+  document(id: String!): DocumentWithRelations
+  # search: TODO:
+}
 
-# type RevisionWithRelations implements BaseRevision {
-#   id: String!
-#   message: String!
-#   content: String!
-#   authorId: String!
-#   documentId: String!
-#   changes: [JSON]!
-#   additions: Int!
-#   deletions: Int!
-#   createdAt: DateTime!
-# }
+interface BaseUser {
+  id: String!
+  picture: String!
+  displayName: String!
+  email: String!
+  createdAt: DateTime!
+  lastActivity: DateTime!
+}
+
+type UserWithoutRelations implements BaseUser {
+  id: String!
+  picture: String!
+  displayName: String!
+  email: String!
+  createdAt: DateTime!
+  lastActivity: DateTime!
+}
+
+type UserWithRelations implements BaseUser {
+  id: String!
+  picture: String!
+  displayName: String!
+  email: String!
+  createdAt: DateTime!
+  lastActivity: DateTime!
+  revisions: [RevisionWithoutRelations]!
+  contributions: [UserToDocumentWithoutRelations]!
+}
+
+extend type Query {
+  user(id: String!): UserWithRelations
+}
+
+interface BaseRevision {
+  id: String!
+  message: String!
+  content: String!
+  authorId: String!
+  documentId: String!
+  changes: [JSON]!
+  additions: Int!
+  deletions: Int!
+  createdAt: DateTime!
+}
+
+type RevisionWithoutRelations implements BaseRevision {
+  id: String!
+  message: String!
+  content: String!
+  authorId: String!
+  documentId: String!
+  changes: [JSON]!
+  additions: Int!
+  deletions: Int!
+  createdAt: DateTime!
+}
+
+type RevisionWithRelations implements BaseRevision {
+  id: String!
+  message: String!
+  content: String!
+  authorId: String!
+  documentId: String!
+  changes: [JSON]!
+  additions: Int!
+  deletions: Int!
+  createdAt: DateTime!
+  document: DocumentWithoutRelations
+  author: UserWithoutRelations
+}
+
+extend type Query {
+  revision(id: String!): RevisionWithRelations
+  revisions(documentId: String!): [RevisionWithRelations]!
+}
